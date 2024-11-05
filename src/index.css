@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* app.css or styles.css */
+[data-invalid='true'] {
+    @apply border-red-500 bg-red-100; /* Tailwind classes */
+}

@@ -1,0 +1,11 @@
+{
+  "extends": "react-app",
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+    // Add any custom rules here
+  }
+}
