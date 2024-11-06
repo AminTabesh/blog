@@ -38,20 +38,30 @@ class UsersController extends Controller
     }
 }
 
-public function create(Request $request){
+public function create(Request $request)
+{
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'content' => 'required|string',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
+    ]);
+
+
+    $imagePath = null;
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('images', 'public'); 
+    }
 
     $post = new Post();
-    $post->title = $request['title'];
-    $post->content = $request['content'];    
-
+    $post->title = $request->title;
+    $post->content = $request->content;
+    $post->image_path = $imagePath; 
     $post->save();
-
 
     return response()->json([
         'message' => 'Post created successfully',
         'Post' => $post
     ], 201);
-    
 }
 
 public function show()

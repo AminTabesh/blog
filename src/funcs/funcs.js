@@ -1,5 +1,3 @@
-
-
 export async function postUser(newUser) {
   const data = await fetch("http://127.0.0.1:8000/api/users", {
     method: "POST",
@@ -20,7 +18,7 @@ export async function getUser(userObj) {
     headers: {
       "Content-type": "application/json",
     },
-    body: JSON.stringify(userObj)
+    body: JSON.stringify(userObj),
   });
 
   const res = await data.json();
@@ -28,21 +26,22 @@ export async function getUser(userObj) {
   return res;
 }
 
-export async function newPost(postObj) {
-  const data = await fetch("http://127.0.0.1:8000/api/posts", {
+export const newPost = async (formData) => {
+  const response = await fetch("http://localhost:8000/api/posts", {
     method: "POST",
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify(postObj),
+    headers: {},
+    body: formData,
+    credentials: "include",
   });
 
-  const res = data.json();
+  if (!response.ok) {
+    throw new Error("Failed to create post");
+  }
 
-  return res;
-}
+  return response.json();
+};
 
-export async function getPosts(userObj) {
+export async function getPosts() {
   const data = await fetch(`http://127.0.0.1:8000/api/posts`);
 
   const res = await data.json();

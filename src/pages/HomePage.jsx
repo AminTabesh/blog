@@ -35,11 +35,11 @@ function HomePage() {
   );
 
   const { mutate } = useMutation({
-    mutationFn: (post) => newPost(post),
+    mutationFn: (formData) => newPost(formData),
     onSuccess: (data) => {
       queryClient.invalidateQueries("posts");
       dispatch(addPost(data.Post));
-      toast.success("Poast created successfuly.");
+      toast.success("Post created successfully.");
     },
     onError: (err) => {
       toast.error("Failed to create the post");
@@ -51,7 +51,7 @@ function HomePage() {
     register,
     formState: { errors },
     handleSubmit,
-    reset
+    reset,
   } = useForm();
 
   if (!isLoggedIn) {
@@ -59,8 +59,13 @@ function HomePage() {
   }
 
   function onSubmit(data) {
-    mutate(data);
-    reset()
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("content", data.content);
+    formData.append("image", data.image[0]);
+
+    mutate(formData);
+    reset();
   }
 
   function handleLogout() {
@@ -104,6 +109,7 @@ function HomePage() {
             <p className="text-red-500">{errors.title.message}</p>
           )}
         </div>
+
         <div className="flex flex-col mb-4">
           <label htmlFor="content" className="font-medium">
             Content:
@@ -121,6 +127,22 @@ function HomePage() {
             <p className="text-red-500">{errors.content.message}</p>
           )}
         </div>
+
+        <div className="flex flex-col mb-4">
+          <label htmlFor="image" className="font-medium">
+            Image:
+          </label>
+          <input
+            type="file"
+            id="image"
+            {...register("image", { required: "Image is required." })}
+            className="mt-4 p-2 file:border-none file:bg-teal-500 file:text-white file:py-2 file:px-4 file:rounded file:cursor-pointer"
+          />
+          {errors.image && (
+            <p className="text-red-500">{errors.image.message}</p>
+          )}
+        </div>
+
         <button
           type="submit"
           className="bg-teal-500 text-white py-2 rounded px-4 transition-colors hover:bg-teal-600"
@@ -134,14 +156,7 @@ function HomePage() {
         <div className="flex gap-8 mt-12 px-10 flex-wrap justify-center">
           {!posts.length && <p>No post found :(</p>}
           {posts.length > 0 &&
-            posts.map((post) => (
-              <Post
-                title={post.title}
-                content={post.content}
-                key={post.id}
-                id={post.id}
-              />
-            ))}
+            posts.map((post) => <Post post={post} key={post.id} />)}
         </div>
       </div>
     </div>

@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
-function Post({ title, content, id }) {
+function Post({ post }) {
+  const {content, title, id} = post
+  const pathPrefix = '../../../backend/public/storage/'
   const navigate = useNavigate();
   let formattedContent = "";
 
@@ -15,7 +17,7 @@ function Post({ title, content, id }) {
       }}
     >
       <img
-        src="/public/logo.png"
+        src={post.image_path ? `${pathPrefix}${post.image_path}` : '/public/logo.png'}
         alt="img"
         className="h-3/6 w-full object-cover"
       />
